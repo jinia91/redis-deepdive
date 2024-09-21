@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  sample:
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - "8881:8881"
+      - "9991:9991"
+    networks:
+      - internal-network
+    environment:
+      TZ: "Asia/Seoul"
+      JAVA_TOOL_OPTIONS: -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.port=9991 -Dcom.sun.management.jmxremote.rmi.port=9991 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=$DEFAULT_IP  -Xms2G -Xmx2G
+      SPRING_APPLICATION_JSON: '{
+          "server.port": 8881,
+               "spring.data.redis.host": "redis",
+          "spring.data.redis.port": 8882
+        }'
+
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7.0
+    container_name: redis
+    networks:
+      - internal-network
+    ports:
+      - "8882:6379"
+    command: ["bash", "-c", "echo never > /sys/kernel/mm/transparent_hugepage/enabled && redis-server"]
+    privileged: true
+
+networks:
+  internal-network:
+    driver: bridge
