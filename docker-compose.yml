@@ -11,7 +11,7 @@ services:
       - internal-network
     environment:
       TZ: "Asia/Seoul"
-      JAVA_TOOL_OPTIONS: -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.port=9991 -Dcom.sun.management.jmxremote.rmi.port=9991 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=$DEFAULT_IP  -Xms2G -Xmx2G
+#      JAVA_TOOL_OPTIONS: -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.port=9991 -Dcom.sun.management.jmxremote.rmi.port=9991 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=$DEFAULT_IP  -Xms2G -Xmx2G
       SPRING_APPLICATION_JSON: '{
           "server.port": 8881,
                "spring.data.redis.host": "redis",
@@ -20,6 +20,18 @@ services:
 
     depends_on:
       - redis
+
+  mysql:
+    image: mysql:8.0.39
+    platform: linux/arm64
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: redis
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
 
   redis:
     image: redis:7.0
