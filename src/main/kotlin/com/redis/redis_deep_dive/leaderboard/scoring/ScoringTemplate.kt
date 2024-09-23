@@ -23,4 +23,11 @@ class ScoringTemplate(
             .reverseRangeWithScores("leaderboard:${LocalDate.now()}", 0, -1)!!
             .mapNotNull { Player(it.value!!.toLong(), it.score!!) }
     }
+
+    fun getTop5(): List<Player> {
+        return redisTemplate
+            .opsForZSet()
+            .reverseRangeWithScores("leaderboard:${LocalDate.now()}", 0, 4)!!
+            .mapNotNull { Player(it.value!!.toLong(), it.score!!) }
+    }
 }

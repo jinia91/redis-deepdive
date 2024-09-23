@@ -25,4 +25,14 @@ class LeaderBoardController(
     fun scoringStop() {
         scoringSystem.stop()
     }
+
+    @GetMapping("/leaderboard/top5")
+    fun getTop5(): List<Player> {
+        return scoringTemplate.getTop5()
+    }
+
+    @GetMapping("/leaderboard/{playerId}")
+    fun getScore(playerId: Long): Double? {
+        return scoringTemplate.getScore(playerId)
+    }
 }
