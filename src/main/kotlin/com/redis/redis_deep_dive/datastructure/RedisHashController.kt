@@ -1,4 +1,4 @@
-package com.redis.redis_deep_dive.data_structure
+package com.redis.redis_deep_dive.datastructure
 
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.web.bind.annotation.PostMapping

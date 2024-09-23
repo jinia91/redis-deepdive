@@ -1,5 +1,6 @@
-package com.redis.redis_deep_dive.data_structure
+package com.redis.redis_deep_dive.datastructure
 
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -15,6 +16,7 @@ class RedisListController(
     }
 
     @PostMapping("/index")
+    @Operation(summary = "list의 index번째 요소를 반환합니다.", description = "리스트 인덱스 서치는 링크드 리스트이므로 O(n)의 시간복잡도, 리스트는 그냥 안쓰는게 좋을듯")
     fun index(@RequestBody index: Long): String {
         return redisTemplate.opsForList().index("list", index) ?: "fail"
     }
