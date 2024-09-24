@@ -18,7 +18,8 @@ class PerRestController(
     @GetMapping("/fetch/{key}")
     fun fetch(
         @PathVariable key: String,
-        @RequestParam delta: Long): String? {
-        return perClient.fetch(key, delta)
+        @RequestParam delta: Long
+    ): String? {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                return perClient.fetch(key, delta)
     }
 }
