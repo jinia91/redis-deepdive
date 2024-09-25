@@ -1,12 +1,14 @@
 package com.redis.redis_deep_dive.pubsub.publisher.inbound
 
 import com.redis.redis_deep_dive.pubsub.publisher.outbound.RedisPublisher
+import org.springframework.data.redis.listener.RedisMessageListenerContainer
+import org.springframework.util.ClassUtils
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class RedisPubController(
-    private val redisPublisher: RedisPublisher
+    private val redisPublisher: RedisPublisher,
 ) {
     @PostMapping("/publish")
     fun publishMessage() {
