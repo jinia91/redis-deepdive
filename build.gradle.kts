@@ -19,7 +19,16 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("io.opentelemetry:opentelemetry-bom:1.34.1")
+        mavenBom("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:2.8.0")
+    }
+}
+
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 //    implementation("org.redisson:redisson-spring-boot-starter:3.36.0")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -31,6 +40,11 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("io.micrometer:micrometer-tracing")
+    implementation("io.micrometer:micrometer-tracing-bridge-otel")
+    implementation("io.micrometer:micrometer-registry-otlp")
+    runtimeOnly("io.opentelemetry.instrumentation:opentelemetry-lettuce-5.1:2.8.0-alpha")
+    implementation("io.github.oshai:kotlin-logging-jvm:7.0.0")
 }
 
 kotlin {

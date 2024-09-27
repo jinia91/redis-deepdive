@@ -21,6 +21,8 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration
 import org.springframework.data.redis.cache.RedisCacheManager
 import org.springframework.data.redis.connection.RedisCommands
 import org.springframework.data.redis.connection.RedisConnectionFactory
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
+import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.StringRedisSerializer
@@ -29,7 +31,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 @Configuration
 @EnableCaching
 class RedisCacheConfig(
-    private val redisConnectionFactory: RedisConnectionFactory,
+    private val redisTemplate: RedisTemplate<String, String>,
 ) {
 //    @Bean
 //    fun redisCacheManager(): RedisCacheManager {
@@ -52,8 +54,6 @@ class RedisCacheConfig(
     @Bean
     fun cacheManager(redisClient: RedisClient) : CacheManager {
         val clientCache: Map<String, String> = ConcurrentHashMap()
-        val otherParty: StatefulRedisConnection<String, String> = redisClient.connect()
-        val commands = otherParty.sync()
         val connection: StatefulRedisConnection<String, String> = redisClient.connect()
         val frontend = ClientSideCaching.enable(
             CacheAccessor.forMap(clientCache), connection,
@@ -93,11 +93,11 @@ class RedisCacheConfig(
                     }
 
                     override fun put(key: Any, value: Any?) {
-                        commands.set(key.toString(), objectMapper.writeValueAsString(value))
+                        redisTemplate.opsForValue().set(key.toString(), objectMapper.writeValueAsString(value))
                     }
 
                     override fun evict(key: Any) {
-                        commands.pexpire(key.toString(), 0)
+                        redisTemplate.delete(key.toString())
                     }
 
                     override fun clear() {

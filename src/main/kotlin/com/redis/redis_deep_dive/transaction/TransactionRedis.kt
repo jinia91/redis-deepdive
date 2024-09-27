@@ -14,11 +14,12 @@ class TransactionRedis(
     fun transaction() {
         redisTemplate.execute(object : SessionCallback<String> {
             override fun <K : Any?, V : Any?> execute(operations: RedisOperations<K, V>): String? {
-                    operations.multi()
-                    operations.opsForValue().set("key1" as (K & Any), "먼저 실행" as (V & Any))
-                    Thread.sleep(20000)
-                    operations.opsForValue().set("key2" as (K & Any), "최종커밋" as (V & Any))
-                    operations.exec()
+//                operations.watch("key1" as (K & Any)) 낙관락
+                operations.multi()
+                operations.opsForValue().set("key1" as (K & Any), "먼저 실행" as (V & Any))
+                Thread.sleep(20000)
+                operations.opsForValue().set("key2" as (K & Any), "최종커밋" as (V & Any))
+                operations.exec()
                 return "OK"
             }
         })
